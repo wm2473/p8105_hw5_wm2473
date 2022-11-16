@@ -1,0 +1,25 @@
+---
+title: "p8105_hw5_wm2473"
+output: github_document
+date: "2022-11-14"
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(rvest)
+set.seed(1)
+
+```
+
+```{r}
+#Describe the raw data.?? 
+hd = read_csv("homicide-data.csv") %>% 
+  janitor::clean_names() %>% 
+   mutate(city_state = str_c(city,",", state))
+
+```
+
+
+
+
