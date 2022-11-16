@@ -100,13 +100,27 @@ norm_and_t_test = function(mu) {
     broom::tidy() %>% 
     select(estimate, p.value)
 }
+```
+testing mean=0
+```{r}
+sim_reuslt_df_0=
+  expand_grid(
+    true_mean=0,
+    iter=1:5000)%>%
+  mutate(results=map(true_mean,norm_and_t_test))%>%
+  unnest(results)
+head(sim_reuslt_df_0)
+```
 
+using the function for mean=1,2,3,4,5,6
+```{r}
 sim_results_df = 
   expand_grid(
     mu = c(1, 2, 3, 4, 5, 6),
-    itr = 1:5000) %>% 
+    iter = 1:5000) %>% 
   mutate(results = map(mu, norm_and_t_test)) %>% 
   unnest(results)
+head(sim_results_df)
 ```
 
 First plot(mu vs. proportion of reject)
