@@ -19,6 +19,10 @@ hd = read_csv("homicide-data.csv") %>%
    mutate(city_state = str_c(city,",", state), 
          homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) 
 
+hd %>% 
+  group_by(city_state, homicides) %>% 
+  count() %>% 
+  knitr::kable()
 ```
 
 
