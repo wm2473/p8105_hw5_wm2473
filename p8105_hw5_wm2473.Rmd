@@ -103,19 +103,18 @@ norm_and_t_test = function(mu) {
 
 sim_results_df = 
   expand_grid(
-    mu = c(0, 1, 2, 3, 4, 5, 6),
+    mu = c(1, 2, 3, 4, 5, 6),
     itr = 1:5000) %>% 
   mutate(results = map(mu, norm_and_t_test)) %>% 
   unnest(results)
 ```
 
-First plot
+First plot(mu vs. proportion of reject)
 ```{r}
 sim_results_df %>% 
-  mutate(decision = case_when(p.value < 0.05 ~ "reject",p.value >= 0.05 ~ "fail_to_reject"))
-
-
-
+  mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
+  group_by(mu) %>% 
+  summarize(n_obs = n(), prop_reject = sum(decision == "reject") / n_obs * 100) 
 ```
 
 
