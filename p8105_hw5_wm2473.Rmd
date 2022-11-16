@@ -16,7 +16,8 @@ set.seed(1)
 #Describe the raw data.?? 
 hd = read_csv("homicide-data.csv") %>% 
   janitor::clean_names() %>% 
-   mutate(city_state = str_c(city,",", state))
+   mutate(city_state = str_c(city,",", state), 
+         homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) 
 
 ```
 
