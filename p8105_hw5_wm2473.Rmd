@@ -141,7 +141,9 @@ sd = sim_results_df %>%
   filter(decision == "reject") %>%
   group_by(mu) %>% 
   summarize(average_estimate = mean(estimate), null_reject = sum(p.value)) %>% 
-  ggplot(aes(x = mu, y = average_estimate)) 
+  ggplot(aes(x = mu, y = average_estimate))+ geom_point()+
+  geom_smooth()
+sd
 ```
 
 
