@@ -17,7 +17,10 @@ set.seed(1)
 hd = read_csv("homicide-data.csv") %>% 
   janitor::clean_names() %>% 
    mutate(city_state = str_c(city,",", state), 
-         homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) 
+         homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) %>% 
+  filter(city_state != "TulsaAL") %>% 
+  relocate(city_state)
+
 
 hd %>% 
   group_by(city_state, homicides) %>% 
@@ -26,5 +29,21 @@ hd %>%
 ```
 
 
+```{r}
+Baltimore = hd %>%
+  filter(city_state == "Baltimore,MD") %>%  
+  summarise(
+    unsolved = sum(homicides == "unsolved homicides"),
+    n = n()
+  )
+
+Baltimore_test = 
+  prop.test(
+    x = Baltimore %>% pull(unsolved),
+    n = Baltimore %>% pull(n))
+
+Baltimore_test %>% 
+  broom::tidy()
+```
 
 
