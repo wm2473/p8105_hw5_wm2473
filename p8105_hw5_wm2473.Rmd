@@ -109,3 +109,16 @@ sim_results_df =
   unnest(results)
 ```
 
+First plot
+```{r}
+sim_results_df %>% 
+  mutate(decision = case_when(p.value < 0.05 ~ "reject",p.value >= 0.05 ~ "fail_to_reject"))
+
+
+
+```
+
+
+```{r}
+```
+
