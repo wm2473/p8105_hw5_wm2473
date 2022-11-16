@@ -115,14 +115,17 @@ sim_results_df %>%
   mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
   group_by(mu) %>% 
   summarize(n_obs = n(), prop_reject = sum(decision == "reject") / n_obs * 100)%>%
-  ggplot(aes(x = mu, y = prop_reject)) + geom_point() +geom_path(alpha = .5)+labs(
-    title = "Power vs. True mean",
-    x = "True mean",
-    y = "Power")
+  ggplot(aes(x = mu, y = prop_reject)) + geom_point() +geom_path(alpha = .5)+labs(title = "Power vs. True mean",x = "True mean", y = "Power")+scale_x_continuous(breaks = 1:6)
 
 ```
 
-
+Second graph (average estimate of mu vs. true value mu)
 ```{r}
+sim_results_df %>% 
+  mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
+  group_by(mu) %>% 
+  summarize(avergae_estimate = mean(estimate)) %>% 
+  
+  
 ```
 
