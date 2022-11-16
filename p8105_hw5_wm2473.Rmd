@@ -15,10 +15,11 @@ set.seed(1)
 
 Problem 2
 ```{r}
-#Describe the raw data: For the homicides raw dataset, it contains 52179 observations and 12 variables (columns), which are respectively uid, reported_date, victim_last, victim_first, victim_race, victim_age, victim_sex, city, state, latitude, longtitude, disposition. 
+#Describe the raw data: For the homicides raw dataset, it contains 52179 observations and 12 variables (columns), which are respectively uid, reported_date, victim_last, victim_first, victim_race, victim_age, victim_sex, city, state, latitude, longtitude, disposition. There are some NA missing value in latitude and longtitude column. Also, in the columns "race", "age" and "sex" contains data unknown which can indeciate that the person information is still misiing. 
 
 hd = read_csv("homicide-data.csv") %>% 
   janitor::clean_names() %>% 
+  na.omit() %>% 
    mutate(city_state = str_c(city,",", state), 
          homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) %>%
   filter(city_state != "TulsaAL") %>% 
@@ -158,7 +159,7 @@ sd = sim_results_df %>%
   group_by(mu) %>% 
   summarize(average_estimate = mean(estimate), null_reject = sum(p.value)) %>% 
   ggplot(aes(x = mu, y = average_estimate))+ geom_point()+
-  geom_smooth()+ labs(title="true mean vs. average estimate of mu only only in samples for which the null was rejected"),
+  geom_smooth()+ labs(title="true mean vs. average estimate of mu only only in samples for which the null was rejected",
          x="true mean",
          y="estimated mean")
 sd
