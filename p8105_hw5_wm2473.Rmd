@@ -127,9 +127,9 @@ true_estimate = sim_results_df %>%
   group_by(mu) %>% 
   summarize(average_estimate = mean(estimate)) %>% 
   ggplot(aes(x = mu, y = average_estimate)) +
-  geom_point()+ geom_line(alpha = .5)+ labs(title = "True value mu vs. average estimate of mu",
-    x = "True mu",
-    y = "Average estimated mu"
+  geom_point()+ geom_line(alpha = .5)+ labs(title = "True value mu vs. average estimate of mean",
+    x = "True mean",
+    y = "Average estimated mean"
   )
 true_estimate  
 ```
@@ -142,7 +142,9 @@ sd = sim_results_df %>%
   group_by(mu) %>% 
   summarize(average_estimate = mean(estimate), null_reject = sum(p.value)) %>% 
   ggplot(aes(x = mu, y = average_estimate))+ geom_point()+
-  geom_smooth()
+  geom_smooth()+ labs(title="true mean vs. average estimate of mu only only in samples for which the null was rejected"),
+         x="true mean",
+         y="estimated mean")
 sd
 ```
 
