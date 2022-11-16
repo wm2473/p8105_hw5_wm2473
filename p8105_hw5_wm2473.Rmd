@@ -111,21 +111,37 @@ sim_results_df =
 
 First plot(mu vs. proportion of reject)
 ```{r}
-sim_results_df %>% 
+mu_prop = sim_results_df %>% 
   mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
   group_by(mu) %>% 
   summarize(n_obs = n(), prop_reject = sum(decision == "reject") / n_obs * 100)%>%
-  ggplot(aes(x = mu, y = prop_reject)) + geom_point() +geom_path(alpha = .5)+labs(title = "Power vs. True mean",x = "True mean", y = "Power")+scale_x_continuous(breaks = 1:6)
+  ggplot(aes(x = mu, y = prop_reject)) + geom_point() +geom_line(alpha = .5)+labs(title = "Power vs. True mean",x = "True mean", y = "Power")+scale_x_continuous(breaks = 1:6)
 
+mu_prop
 ```
 
-Second graph (average estimate of mu vs. true value mu)
+Second graph (true value mu vs. average estimate of mu)
 ```{r}
-sim_results_df %>% 
+true_estimate = sim_results_df %>% 
   mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
   group_by(mu) %>% 
-  summarize(avergae_estimate = mean(estimate)) %>% 
-  
-  
+  summarize(average_estimate = mean(estimate)) %>% 
+  ggplot(aes(x = mu, y = average_estimate)) +
+  geom_point()+ geom_line(alpha = .5)+ labs(title = "True value mu vs. average estimate of mu",
+    x = "True mu",
+    y = "Average estimated mu"
+  )
+true_estimate  
 ```
+
+Third graph (true mean vs. average estimate of mu only only in samples for which the null was rejected)
+```{r}
+sd = sim_results_df %>% 
+  mutate(decision = case_when(p.value < 0.05 ~ "reject", p.value >= 0.05 ~ "fail_to_reject")) %>% 
+  filter(decision == "reject") %>%
+  group_by(mu) %>% 
+  summarize(average_estimate = mean(estimate), null_reject = sum(p.value)) %>% 
+  ggplot(aes(x = mu, y = average_estimate)) 
+```
+
 
