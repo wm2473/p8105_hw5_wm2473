@@ -80,6 +80,11 @@ Creat the plot
 nested_df %>% 
   mutate(city_state = fct_reorder(city_state, estimate)) %>%
   ggplot(aes(x = city_state, y = estimate)) +
-  geom_point()
+  geom_point()+geom_errorbar(aes(ymin = conf.low, ymax = conf.high))+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Estimate vale among different city with errorbar",
+       x = "City(State)",
+       y = "Estimate") 
 ```
 
