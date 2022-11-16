@@ -8,6 +8,7 @@ date: "2022-11-14"
 library(tidyverse)
 library(readxl)
 library(rvest)
+library(ggplot2)
 set.seed(1)
 
 ```
@@ -17,7 +18,7 @@ set.seed(1)
 hd = read_csv("homicide-data.csv") %>% 
   janitor::clean_names() %>% 
    mutate(city_state = str_c(city,",", state), 
-         homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) %>% 
+         homicides = case_when(disposition == "Closed without arrest" ~ "unsolved homicides", disposition == "Open/No arrest" ~ "unsolved homicides", disposition == "Closed by arrest" ~ "solved homicides")) %>%
   filter(city_state != "TulsaAL") %>% 
   relocate(city_state)
 
@@ -64,6 +65,11 @@ city_proptest = function(hd){
 ```
 
 ```{r}
-
+nested_df = hd %>%
+  nest(data = uid:homicides) %>% 
+  mutate(
+    test_results = map(data, city_proptest),
+    tidy_results = map(test_results, broom::tidy)
+  ) 
 ```
 
