@@ -10,50 +10,8 @@ library(readxl)
 library(rvest)
 library(ggplot2)
 set.seed(1)
-
 ```
 
-## Problem 1
-The code chunk below imports the data in individual spreadsheets contained in `./data/zip_data/`. To do this, I create a dataframe that includes the list of all files in that directory and the complete path to each file. As a next step, I `map` over paths and import data using the `read_csv` function. Finally, I `unnest` the result of `map`.
-
-```{r}
-full_df = 
-  tibble(
-    files = list.files("data/zip_data/"),
-    path = str_c("data/zip_data/", files)
-  ) %>% 
-  mutate(data = map(path, read_csv)) %>% 
-  unnest()
-```
-
-The result of the previous code chunk isn't tidy -- data are wide rather than long, and some important variables are included as parts of others. The code chunk below tides the data using string manipulations on the file, converting from wide to long, and selecting relevant variables. 
-
-```{r}
-tidy_df = 
-  full_df %>% 
-  mutate(
-    files = str_replace(files, ".csv", ""),
-    group = str_sub(files, 1, 3)) %>% 
-  pivot_longer(
-    week_1:week_8,
-    names_to = "week",
-    values_to = "outcome",
-    names_prefix = "week_") %>% 
-  mutate(week = as.numeric(week)) %>% 
-  select(group, subj = files, week, outcome)
-```
-
-Finally, the code chunk below creates a plot showing individual data, faceted by group. 
-
-```{r}
-tidy_df %>% 
-  ggplot(aes(x = week, y = outcome, group = subj, color = group)) + 
-  geom_point() + 
-  geom_path() + 
-  facet_grid(~group)
-```
-
-This plot suggests high within-subject correlation -- subjects who start above average end up above average, and those that start below average end up below average. Subjects in the control group generally don't change over time, but those in the experiment group increase their outcome in a roughly linear way. 
 Problem 2
 ```{r}
 #Describe the raw data: For the homicides raw dataset, it contains 52179 observations and 12 variables (columns), which are respectively uid, reported_date, victim_last, victim_first, victim_race, victim_age, victim_sex, city, state, latitude, longtitude, disposition. There are some NA missing value in latitude and longtitude column. Also, in the columns "race", "age" and "sex" contains data unknown which can indeciate that the person information is still misiing. There is a place Tulsa, one of the data is not in OK but in AL state. 
