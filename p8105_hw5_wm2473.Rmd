@@ -43,7 +43,27 @@ Baltimore_test =
     n = Baltimore %>% pull(n))
 
 Baltimore_test %>% 
-  broom::tidy()
+  broom::tidy() 
 ```
 
+Prop.test for each of the city
+```{r}
+city_proptest = function(hd){
+  city_summarize = hd %>%
+  summarise(
+    unsolved = sum(homicides == "unsolved homicides"),
+    n = n())
+  
+  city_test = 
+  prop.test(
+    x = city_summarize %>% pull(unsolved),
+    n = city_summarize %>% pull(n))
+  
+  return(city_test)
+}
+```
+
+```{r}
+
+```
 
