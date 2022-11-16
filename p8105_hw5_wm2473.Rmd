@@ -66,10 +66,20 @@ city_proptest = function(hd){
 
 ```{r}
 nested_df = hd %>%
-  nest(data = uid:homicides) %>% 
+  nest(alldata = uid:homicides) %>% 
   mutate(
-    test_results = map(data, city_proptest),
-    tidy_results = map(test_results, broom::tidy)
-  ) 
+    test_results = map(alldata, city_proptest),
+    cleanresults = map(test_results, broom::tidy)
+  ) %>% 
+  select(city_state, cleanresults) %>% 
+  unnest(cleanresults) %>% 
+  select(city_state, estimate, starts_with("conf"))
+```
+Creat the plot
+```{r}
+nested_df %>% 
+  mutate(city_state = fct_reorder(city_state, estimate)) %>%
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point()
 ```
 
