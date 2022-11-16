@@ -15,7 +15,8 @@ set.seed(1)
 
 Problem 2
 ```{r}
-#Describe the raw data.?? 
+#Describe the raw data: For the homicides raw dataset, it contains 52179 observations and 12 variables (columns), which are respectively uid, reported_date, victim_last, victim_first, victim_race, victim_age, victim_sex, city, state, latitude, longtitude, disposition. 
+
 hd = read_csv("homicide-data.csv") %>% 
   janitor::clean_names() %>% 
    mutate(city_state = str_c(city,",", state), 
@@ -30,7 +31,7 @@ hd %>%
   knitr::kable()
 ```
 
-
+estimate the unsolved proportion of homicides in Baltimore, MD
 ```{r}
 Baltimore = hd %>%
   filter(city_state == "Baltimore,MD") %>%  
@@ -65,6 +66,7 @@ city_proptest = function(city_df){
 }
 ```
 
+Create a tidy dataframe with estimated proportions and CIs for each city
 ```{r}
 nested_df = hd %>%
   nest(alldata = uid:homicides) %>% 
